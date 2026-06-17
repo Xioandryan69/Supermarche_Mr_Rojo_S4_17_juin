@@ -139,9 +139,9 @@ class AchatController extends BaseController
         $db = \Config\Database::connect();
         $db->transStart();
 
-
+        $idCaisse = session()->get('id_caisse');
         $achatMereId = $this->achatMereModel->insert([
-            'idCaisse' => 1, // à remplacer dynamiquement
+            'idCaisse' => $idCaisse,
             'date' => date('Y-m-d H:i:s'),
             'total' => 0
         ], true);
@@ -189,6 +189,6 @@ class AchatController extends BaseController
             return redirect()->back()->with('error', 'Erreur lors de l\'achat');
         }
 
-        return redirect()->to('achats')->with('success', 'Achat validé avec succès');
+        return redirect()->to('dashboard/achats')->with('success', 'Achat validé avec succès');
     }
 }

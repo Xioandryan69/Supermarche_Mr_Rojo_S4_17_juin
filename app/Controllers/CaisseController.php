@@ -21,11 +21,18 @@ class CaisseController extends BaseController
 
     public function valider()
     {
-        $idCaisse = $this->request->getPost('id_caisse');
+        $idCaisse = (int) $this->request->getPost('id_caisse');
+        $caisse = $this->caisseModel->find($idCaisse);
 
+        if (! $caisse) {
+            return redirect()->back()->with('error', 'Caisse invalide');
+        }
 
-        session()->set('id_caisse', $idCaisse);
+        session()->set([
+            'id_caisse' => $idCaisse,
+            'caisse_designation' => $caisse['designation'],
+        ]);
 
-        return redirect()->to(site_url('achats'));
+        return redirect()->to(site_url('dashboard'));
     }
 }

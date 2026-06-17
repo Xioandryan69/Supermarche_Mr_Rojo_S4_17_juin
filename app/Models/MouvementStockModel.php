@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SourceModel extends Model
+class MouvementStockModel extends Model
 {
-    protected $table            = 'source';
+    protected $table            = 'mouvementStock';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
 
@@ -15,8 +15,10 @@ class SourceModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'libelle'
-
+        'idSource'
     ];
 
+    protected $useTimestamps = true;
+
+    protected $date = 'date';
 }

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SourceModel extends Model
+class AchatFilleModel extends Model
 {
-    protected $table            = 'source';
+    protected $table            = 'achatFille';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
 
@@ -15,8 +15,10 @@ class SourceModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'libelle'
-
+        'idAchatMere',
+        'idProduit',
+        'quantite'
     ];
+
 
 }

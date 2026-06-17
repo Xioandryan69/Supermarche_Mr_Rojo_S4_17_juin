@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SourceModel extends Model
+class UsersModel extends Model
 {
-    protected $table            = 'source';
+    protected $table            = 'users';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
 
@@ -15,8 +15,9 @@ class SourceModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'libelle'
-
+        'username',
+        'password'
     ];
+
 
 }

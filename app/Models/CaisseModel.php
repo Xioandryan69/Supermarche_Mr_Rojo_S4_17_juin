@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class SourceModel extends Model
+class CaisseModel extends Model
 {
-    protected $table            = 'source';
+    protected $table            = 'caisse';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
 
@@ -15,8 +15,8 @@ class SourceModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'libelle'
-
+        'designation',
+        'idSource'
     ];
 
 }

@@ -72,3 +72,13 @@ in SYSTEMPATH/Database/SQLite3/Connection.php on line 164.
 12 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
 13 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
 14 SYSTEMPATH/rewrite.php(44): require_once('/home/huhu/Bureau/web/Supermarche_Mr_Rojo_S4_17_juin/public/index.php')
+CRITICAL - 2026-06-17 07:38:30 --> TypeError: App\Controllers\CaisseController::valider(): Return value must be of type string, none returned
+[Method: POST, Route: caisse/valider]
+in APPPATH/Controllers/CaisseController.php on line 28.
+ 1 SYSTEMPATH/CodeIgniter.php(951): App\Controllers\CaisseController->valider()
+ 2 SYSTEMPATH/CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController()
+ 3 SYSTEMPATH/CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest()
+ 4 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+ 7 SYSTEMPATH/rewrite.php(44): require_once('/home/huhu/Bureau/web/Supermarche_Mr_Rojo_S4_17_juin/public/index.php')

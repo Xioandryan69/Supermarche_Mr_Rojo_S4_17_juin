@@ -18,4 +18,14 @@ class CaisseController extends BaseController
 
         return view('caisse/index', ['caisses' => $caisses]);
     }
+
+    public function valider()
+    {
+        $idCaisse = $this->request->getPost('id_caisse');
+
+
+        session()->set('id_caisse', $idCaisse);
+
+        return redirect()->to(site_url('achat'));
+    }
 }

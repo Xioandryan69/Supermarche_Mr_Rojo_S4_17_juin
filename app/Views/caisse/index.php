@@ -9,7 +9,7 @@
 
 <body>
 
-    <form method="post">
+    <form method="post" action="<?= site_url('caisse/valider') ?>">
         <label for="caisse">Choisir une caisse :</label>
 
         <select name="id_caisse" id="caisse">
@@ -17,7 +17,7 @@
 
             <?php foreach ($caisses as $caisse): ?>
                 <option value="<?= $caisse['id'] ?>">
-                    <?= esc($caisse['libelle']) ?>
+                    <?= esc($caisse['designation']) ?>
                 </option>
             <?php endforeach; ?>
         </select>

@@ -13,10 +13,33 @@
         <option value="">Produit</option>
         <option value="">Produit</option>
 
-    
 
+    <?php foreach($produits as $produit): ?>
+         <option value="<?= $produit['id'] ?>"><?= $produit['libelle'] ?></option>
+    <?php endforeach; ?>
         
     </select>
+
+    <table border="1">
+
+    <tr>
+        <th>ID</th>
+        <th>Désignation</th>
+        <th>Catégorie</th>
+    </tr>
+
+    <?php foreach($produits as $produit): ?>
+
+        <tr>
+            <td><?= $produit['id'] ?></td>
+
+            <td><?= $produit['designation'] ?></td>
+
+            <td><?= $produit['libelle'] ?></td>
+        </tr>
+
+    <?php endforeach; ?>
+
     
     
 </body>

@@ -26,6 +26,6 @@ class CaisseController extends BaseController
 
         session()->set('id_caisse', $idCaisse);
 
-        return redirect()->to(site_url('achat'));
+        return redirect()->to(site_url('achats'));
     }
 }

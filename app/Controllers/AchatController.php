@@ -48,12 +48,65 @@ class AchatController extends BaseController
     //ajax
     public function verifierStock()
     {
-        $idproduit = $this->request->getPost('idproduit');
-        $nombre = $this->request->getPost('nombre');
-        $stock = 0;
+        $idProduit = (int) $this->request->getPost('idproduit');
+        $nombre = (int) $this->request->getPost('nombre');
 
-        //returner quantitee restant 
-        return $this->response->setJSON(['stock' => $stock]);
+        if ($idProduit <= 0) {
+            return $this->response->setJSON([
+                'stock' => 0,
+                'disponible' => false,
+                'message' => 'Produit invalide',
+            ]);
+        }
+
+        $stock = $this->getStockProduit($idProduit);
+
+        return $this->response->setJSON([
+            'stock' => $stock,
+            'disponible' => $nombre <= $stock,
+            'message' => $nombre <= $stock
+                ? 'Stock disponible'
+                : 'Stock insuffisant',
+        ]);
+    }
+
+    private function getStockProduit(int $idProduit): int
+    {
+        $db = \Config\Database::connect();
+
+        $entrees = (int) ($db->table('mouvementStockFille')
+            ->selectSum('quantite', 'total')
+            ->join('mouvementStock', 'mouvementStock.id = mouvementStockFille.idMouvementStock')
+            ->join('typeMouvementStock', 'typeMouvementStock.id = mouvementStock.idTypeMouvementStock')
+            ->where('idProduit', $idProduit)
+            ->where('UPPER(typeMouvementStock.libelle)', 'ENTREE', false)
+            ->get()
+            ->getRow()
+            ->total ?? 0);
+
+        $sorties = (int) ($db->table('mouvementStockFille')
+            ->selectSum('quantite', 'total')
+            ->join('mouvementStock', 'mouvementStock.id = mouvementStockFille.idMouvementStock')
+            ->join('typeMouvementStock', 'typeMouvementStock.id = mouvementStock.idTypeMouvementStock')
+            ->where('idProduit', $idProduit)
+            ->where('UPPER(typeMouvementStock.libelle)', 'SORTIE', false)
+            ->get()
+            ->getRow()
+            ->total ?? 0);
+
+        return max(0, $entrees - $sorties);
+    }
+
+    private function getTypeMouvementStockId(string $libelle): ?int
+    {
+        $db = \Config\Database::connect();
+        $type = $db->table('typeMouvementStock')
+            ->select('id')
+            ->where('UPPER(libelle)', strtoupper($libelle), false)
+            ->get()
+            ->getRow();
+
+        return $type ? (int) $type->id : null;
     }
 
     public function validerAchats()
@@ -62,6 +115,31 @@ class AchatController extends BaseController
 
         if (!$panier) {
             return redirect()->back()->with('error', 'Panier vide');
+        }
+
+        $quantitesParProduit = [];
+
+        foreach ($panier as $item) {
+            $produitId = (int) ($item['id'] ?? 0);
+            $quantite = (int) ($item['qty'] ?? 0);
+
+            if ($produitId <= 0 || $quantite <= 0) {
+                return redirect()->back()->with('error', 'Produit ou quantité invalide');
+            }
+
+            $quantitesParProduit[$produitId] = ($quantitesParProduit[$produitId] ?? 0) + $quantite;
+        }
+
+        foreach ($quantitesParProduit as $produitId => $quantiteDemandee) {
+            if ($quantiteDemandee > $this->getStockProduit((int) $produitId)) {
+                return redirect()->back()->with('error', 'Stock insuffisant pour un produit du panier');
+            }
+        }
+
+        $typeSortieId = $this->getTypeMouvementStockId('SORTIE');
+
+        if ($typeSortieId === null) {
+            return redirect()->back()->with('error', 'Type de mouvement SORTIE introuvable');
         }
 
         $db = \Config\Database::connect();
@@ -96,6 +174,7 @@ class AchatController extends BaseController
 
             $mouvementId = $this->mouvementStockModel->insert([
                 'idSource' => 1,
+                'idTypeMouvementStock' => $typeSortieId,
                 'date' => date('Y-m-d H:i:s')
             ], true);
 

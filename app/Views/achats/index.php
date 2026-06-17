@@ -44,7 +44,8 @@
     <label>Quantité :</label>
     <input type="number" id="quantite" min="1" value="1">
 
-    <button type="button" onclick="ajouterPanier()">Ajouter</button>
+    <button type="button" id="btnAjouter" onclick="ajouterPanier()">Ajouter</button>
+    <p id="stockInfo"></p>
 
     <hr>
 
@@ -82,8 +83,67 @@
 
     <script>
         let panier = [];
+        const verifierStockUrl = "<?= site_url('achat/verifier-stock') ?>";
 
-        function ajouterPanier() {
+        document.getElementById('produit').addEventListener('change', verifierStockProduit);
+        document.getElementById('quantite').addEventListener('input', verifierStockProduit);
+        document.addEventListener('DOMContentLoaded', verifierStockProduit);
+
+        function quantiteDansPanier(idProduit) {
+            return panier
+                .filter(item => item.id === idProduit)
+                .reduce((total, item) => total + item.qty, 0);
+        }
+
+        async function verifierStockProduit() {
+            let select = document.getElementById('produit');
+            let quantiteInput = document.getElementById('quantite');
+            let stockInfo = document.getElementById('stockInfo');
+            let btnAjouter = document.getElementById('btnAjouter');
+
+            let id = select.value;
+            let qty = parseInt(quantiteInput.value) || 0;
+            let nombre = qty + quantiteDansPanier(id);
+
+            let formData = new FormData();
+            formData.append('idproduit', id);
+            formData.append('nombre', nombre);
+
+            try {
+                let response = await fetch(verifierStockUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+                let data = await response.json();
+
+                quantiteInput.max = data.stock;
+                stockInfo.innerText = `Stock disponible : ${data.stock}`;
+
+                if (!data.disponible) {
+                    stockInfo.innerText += ' - quantité insuffisante';
+                }
+
+                btnAjouter.disabled = !data.disponible || qty <= 0;
+
+                return data;
+            } catch (error) {
+                stockInfo.innerText = 'Impossible de vérifier le stock';
+                btnAjouter.disabled = true;
+                return {
+                    stock: 0,
+                    disponible: false
+                };
+            }
+        }
+
+        async function ajouterPanier() {
+            let verification = await verifierStockProduit();
+
+            if (!verification.disponible) {
+                alert('Stock insuffisant pour ce produit');
+                return;
+            }
+
             let select = document.getElementById('produit');
 
             let id = select.value;
@@ -102,6 +162,7 @@
             });
 
             renderPanier();
+            verifierStockProduit();
         }
 
         function renderPanier() {
@@ -144,6 +205,7 @@
         function supprimer(index) {
             panier.splice(index, 1);
             renderPanier();
+            verifierStockProduit();
         }
     </script>
 

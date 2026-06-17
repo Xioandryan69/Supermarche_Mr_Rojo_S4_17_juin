@@ -16,6 +16,7 @@ class MouvementStockModel extends Model
 
     protected $allowedFields = [
         'idSource',
+        'idTypeMouvementStock',
         'date'
     ];
 

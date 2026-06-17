@@ -34,8 +34,10 @@ CREATE TABLE source (
 CREATE TABLE mouvementStock (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     idSource INTEGER,
+    idTypeMouvementStock INTEGER,
     date DATE NOT NULL,
-    FOREIGN KEY (idSource) REFERENCES source (id)
+    FOREIGN KEY (idSource) REFERENCES source (id),
+    FOREIGN KEY (idTypeMouvementStock) REFERENCES typeMouvementStock (id)
 );
 
 CREATE TABLE mouvementStockFille (

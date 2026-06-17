@@ -5,6 +5,7 @@ use App\Models\ProduitModel;
 use App\Models\AchatFilleModel;
 use App\Models\AchatMereModel;
 use App\Models\CaisseModel;
+use App\Models\HistoriquePrixModel;
 
 class AchatController extends BaseController
 {
@@ -49,5 +50,13 @@ class AchatController extends BaseController
             'achats/index',
             $data
         );
+    }
+
+
+    public function getHistoriquePrix($idProduit)
+    {
+         $HistoriquePrixModel=new HistoriquePrixModel();
+         $data['produits'] = $HistoriquePrixModel->getPrixActuel($idProduit);
+         return $data;
     }
 }

@@ -18,8 +18,10 @@ class ProduitModel extends Model
 
     public function getProduitsAvecCategorie()
     {
-        return $this->select('produit.*, categorie.libelle')
+        return $this->select('produit.*, categorie.libelle, HistoriquePrix.prix')
             ->join('categorie', 'categorie.id = produit.id_categorie')
+            ->join('HistoriquePrix', 'HistoriquePrix.id_produit = produit.id')
+            ->where('HistoriquePrix.dateFin IS NULL')
             ->findAll();
     }
 }

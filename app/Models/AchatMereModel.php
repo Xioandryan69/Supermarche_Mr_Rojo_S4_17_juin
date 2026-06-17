@@ -6,19 +6,19 @@ use CodeIgniter\Model;
 
 class AchatMereModel extends Model
 {
-    protected $table            = 'achatMere';
-    protected $primaryKey       = 'id';
+    protected $table = 'achatMere';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
 
-    protected $returnType       = 'array';
+    protected $returnType = 'array';
 
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-        'idCaisse'
+        'idCaisse',
+        'date',
+        'total'
     ];
 
-    protected $useTimestamps = true;
-
-    protected $date = 'date';
+    protected $useTimestamps = false;
 }

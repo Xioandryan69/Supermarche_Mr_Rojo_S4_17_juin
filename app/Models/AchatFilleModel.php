@@ -6,18 +6,19 @@ use CodeIgniter\Model;
 
 class AchatFilleModel extends Model
 {
-    protected $table            = 'achatFille';
-    protected $primaryKey       = 'id';
+    protected $table = 'achatFille';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
 
-    protected $returnType       = 'array';
+    protected $returnType = 'array';
 
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes = false;
 
     protected $allowedFields = [
         'idAchatMere',
         'idProduit',
-        'quantite'
+        'quantite',
+        'prixUnitaire'
     ];
 
 

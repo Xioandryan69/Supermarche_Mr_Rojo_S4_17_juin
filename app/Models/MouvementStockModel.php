@@ -15,10 +15,10 @@ class MouvementStockModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'idSource'
+        'idSource',
+        'idTypeMouvementStock',
+        'date'
     ];
 
-    protected $useTimestamps = true;
-
-    protected $date = 'date';
+    protected $useTimestamps = false;
 }

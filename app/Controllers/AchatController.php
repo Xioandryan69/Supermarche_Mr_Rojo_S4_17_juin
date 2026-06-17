@@ -74,37 +74,31 @@ class AchatController extends BaseController
     {
         $db = \Config\Database::connect();
 
-        $entrees = (int) ($db->table('mouvementStockFille')
-            ->selectSum('quantite', 'total')
-            ->join('mouvementStock', 'mouvementStock.id = mouvementStockFille.idMouvementStock')
-            ->join('typeMouvementStock', 'typeMouvementStock.id = mouvementStock.idTypeMouvementStock')
-            ->where('idProduit', $idProduit)
-            ->where('UPPER(typeMouvementStock.libelle)', 'ENTREE', false)
-            ->get()
-            ->getRow()
-            ->total ?? 0);
+        $row = $db->query(
+            "SELECT COALESCE(SUM(
+                CASE
+                    WHEN UPPER(typeMouvementStock.libelle) = 'ENTREE' THEN mouvementStockFille.quantite
+                    WHEN UPPER(typeMouvementStock.libelle) = 'SORTIE' THEN -mouvementStockFille.quantite
+                    ELSE 0
+                END
+            ), 0) AS stock
+            FROM mouvementStockFille
+            JOIN mouvementStock ON mouvementStock.id = mouvementStockFille.idMouvementStock
+            JOIN typeMouvementStock ON typeMouvementStock.id = mouvementStock.idTypeMouvementStock
+            WHERE mouvementStockFille.idProduit = ?",
+            [$idProduit]
+        )->getRow();
 
-        $sorties = (int) ($db->table('mouvementStockFille')
-            ->selectSum('quantite', 'total')
-            ->join('mouvementStock', 'mouvementStock.id = mouvementStockFille.idMouvementStock')
-            ->join('typeMouvementStock', 'typeMouvementStock.id = mouvementStock.idTypeMouvementStock')
-            ->where('idProduit', $idProduit)
-            ->where('UPPER(typeMouvementStock.libelle)', 'SORTIE', false)
-            ->get()
-            ->getRow()
-            ->total ?? 0);
-
-        return max(0, $entrees - $sorties);
+        return max(0, (int) ($row->stock ?? 0));
     }
 
     private function getTypeMouvementStockId(string $libelle): ?int
     {
         $db = \Config\Database::connect();
-        $type = $db->table('typeMouvementStock')
-            ->select('id')
-            ->where('UPPER(libelle)', strtoupper($libelle), false)
-            ->get()
-            ->getRow();
+        $type = $db->query(
+            'SELECT id FROM typeMouvementStock WHERE UPPER(libelle) = ?',
+            [strtoupper($libelle)]
+        )->getRow();
 
         return $type ? (int) $type->id : null;
     }

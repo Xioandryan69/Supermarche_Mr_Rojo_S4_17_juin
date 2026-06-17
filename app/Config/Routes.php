@@ -12,3 +12,5 @@ $routes->get('/', 'Home::index');
 $routes->get('/caisse', 'CaisseController::index');
 $routes->post('caisse/valider', 'CaisseController::valider');
 $routes->get('/achats', 'AchatController::listeProduit');
+$routes->post('/achat/valider', 'AchatController::validerAchats');
+

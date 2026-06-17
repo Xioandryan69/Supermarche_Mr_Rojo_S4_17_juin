@@ -58,6 +58,7 @@ CREATE TABLE achatMere (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     idCaisse INTEGER,
     date DATE NOT NULL,
+    total DOUBLE,
     FOREIGN KEY (idCaisse) REFERENCES caisse (id)
 );
 
@@ -66,6 +67,7 @@ CREATE TABLE achatFille (
     idAchatMere INTEGER,
     idProduit INTEGER,
     quantite INTEGER NOT NULL,
+    prixUnitaire DOUBLE,
     FOREIGN KEY (idAchatMere) REFERENCES achatMere (id),
     FOREIGN KEY (idProduit) REFERENCES produit (id)
 );

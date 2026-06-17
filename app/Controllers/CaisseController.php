@@ -14,11 +14,18 @@ class CaisseController extends BaseController
 
     public function index(): string
     {
-        $caisses = $this->caisseModel->findAll();
+            $userId = session()->get('id');
 
-        return view('caisse/index', ['caisses' => $caisses]);
+    $username = session()->get('username');
+
+    $caisses = $this->caisseModel->findAll();
+
+    return view('caisse/index', [
+        'caisses' => $caisses,
+        'username' => $username
+    ]);
     }
-
+    
     public function valider()
     {
         $idCaisse = $this->request->getPost('id_caisse');
@@ -28,4 +35,6 @@ class CaisseController extends BaseController
 
         return redirect()->to(site_url('achats'));
     }
+
+
 }

@@ -11,7 +11,17 @@ class AchatController extends BaseController
 {
     public function index(): string
     {
-        return view('achats/index');
+   if (!session()->get('isLoggedIn'))
+    {
+        return redirect()->to('/login');
+    }
+
+    if (!session()->get('id_caisse'))
+    {
+        return redirect()->to('/caisse');
+    }
+
+    return view('achats/index');
     }
 
 

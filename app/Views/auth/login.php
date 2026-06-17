@@ -56,7 +56,10 @@
 </head>
 
 <body>
+
     <form method="post" action="<?= site_url('login') ?>">
+        <p>admin</p>
+        <p>123456</p>
         <h1>Connexion</h1>
 
         <?php if (session()->getFlashdata('error')): ?>
